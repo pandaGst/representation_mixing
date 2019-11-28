@@ -74,7 +74,7 @@ has_mask = True
 # mask_mask = (145, 64)
 # reset = (64, 1)
 mels = np.zeros((256, 64, 80))
-mel_mask = np.ones_like(mels[..., 0])
+mel_mask = np.ones_like(mels[..., 0])    # shape = (256,64)
 text = np.zeros((145, 64, 1))
 text_mask = np.ones_like(text[..., 0])
 mask = np.ones((145, 64))
