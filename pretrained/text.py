@@ -20,7 +20,7 @@ def pronounce_chars(line, raw_line=None, cmu_only=False, int_timing_punct=True):
         end_punct = (0, " ")
     line = english_cleaners(line)
     if cmu_only:
-        r0 = cmu_g2p(line, raw_line)    # 返回的是一个列表，利用转换格式前后的文本，使用CMU词典，将单词转换成CMU， 都是小写， 有些是空
+        r0 = cmu_g2p(line, raw_line)
         return r0    # 返回的全部都是CMU
 
     r = hybrid_g2p(line)
