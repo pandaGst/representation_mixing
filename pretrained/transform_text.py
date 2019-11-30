@@ -35,7 +35,7 @@ def transform_text(char_seq, auto_pronounce=True, phone_seq=None, force_char_spc
         # take out specials then put them back...
         specials = "!?.,;:"
         puncts = "!?."
-        tsc = []
+        tsc = []    # 修改特殊符号之后的字符序列
         for n, csc in enumerate(char_seq_chunk):
             broke = False
             for s in specials:

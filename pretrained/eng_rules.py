@@ -1061,7 +1061,21 @@ del patterns
 del exceptions
 
 def rule_g2p(string, hyphenate=True):
-    # scare/air quotes are ignored
+	'''[summary]
+	
+	1. 去掉字符号前后的引号
+	2. 吧单词拆分成一个个字母
+	
+	Arguments:
+		string {[type]} -- [description]
+	
+	Keyword Arguments:
+		hyphenate {bool} -- [description] (default: {True})
+	
+	Returns:
+		[type] -- [description]
+	'''
+    # scare/air quotes are ignored， 忽略首尾的引号
     if string[0] == "'":
         string = string[1:]
     if string[-1] == "'":
@@ -1181,6 +1195,15 @@ def cmu_g2p(line, raw_line, verbose=False):
     if verbose:
         print(word_split)
 
+    '''
+    对于原始文本的单词可以再CMU找到的，就直接查找
+    对于无爱找到的，就用处理之后的文本里面找
+    仍然找不到的，音素規則置为 None， 具体处理使用hybrid_g2p中的方法处理，用到了g2p_rules
+
+    以上步骤中，規則部分全部置空
+    
+    [description]
+    '''
     out = []
     for n, li in enumerate(word_split):
         if raw_word_split[n] in cmu:
@@ -1195,7 +1218,7 @@ def cmu_g2p(line, raw_line, verbose=False):
             ri = ([None], cmu[li][0])
         else:
             ri = ([None], None)
-        out.append(ri)
+        out.append(ri)    # 得到的单词的CMU标注 ： ELEMENT = [Nnoe], CMU
         """
             # the "don't" case...
             # multi prune here for speed up, cleaners.english_cleaners is not exactly speedy...
@@ -1218,10 +1241,22 @@ def cmu_g2p(line, raw_line, verbose=False):
                 out.append(([None], None))
          """
 
+
+
+    '''
+    上一步的处理结果，一个个处理：
+      如果 out.element[0] = Nnoe, 就提取 CMU
+        如果 CMU = None : 直接放进  fin(al)
+        否则： 去掉CMU结尾的数字，并在CMU前面添加@， 添加到 fin(al)
+    返回：
+        fin(al)的所有字符都要改成小写。
+    
+    [description]
+    '''
     fin = []
     for p in out:
         if p[0] == [None]:
-            pi = p[1]
+            pi = p[1]    # pi 是音素
         else:
             pi = [i for i in p[1] if "<" not in i]
             pi = " ".join(pi).split(" ")
@@ -1231,6 +1266,7 @@ def cmu_g2p(line, raw_line, verbose=False):
             fin.append(pi)
             continue
 
+        # 去掉 音素结尾饿数字，并在音素前面加上 “@” 符号
         part = []
         for pii in pi:
             if "0" in pii:
@@ -1300,7 +1336,7 @@ def hybrid_g2p(line, verbose=False):
                 print("Replacement: {}".format(li))
                 # https://stackoverflow.com/questions/20078816/replace-non-ascii-characters-with-a-single-space
                 ri = rule_g2p(li.upper(), hyphenate=False)
-        out.append(ri)
+        out.append(ri)    # abs_final_phones, abs_final_rules
     fin = []
     for p in out:
         if p[0] == [None]:
