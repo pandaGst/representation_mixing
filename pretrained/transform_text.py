@@ -26,8 +26,8 @@ def transform_text(char_seq, auto_pronounce=True, phone_seq=None, force_char_spc
     if phone_seq is None and auto_pronounce is False and symbol_processing != "chars_only":
         raise ValueError("phone_seq argument must be provided for iterator with self.symbol_processing != 'chars_only', currently '{}'".format(self.symbol_processing))
     clean_char_seq = cleaners.english_cleaners(char_seq)
-    char_seq_chunk = clean_char_seq.split(" ")
-    dirty_seq_chunk = char_seq.split(" ")
+    char_seq_chunk = clean_char_seq.split(" ")    # 处理之后的文本并切分， 去除了标点符号等。 the cat
+    dirty_seq_chunk = char_seq.split(" ")    # 原始文本， the cat.
 
     if auto_pronounce is True:
         if phone_seq is not None:
@@ -48,6 +48,8 @@ def transform_text(char_seq, auto_pronounce=True, phone_seq=None, force_char_spc
                 tsc.append(csc)
 
         if symbol_processing == "blended_pref":
+            # chunky_phone_seq_chunk = [['@dh@ah'], ['@k@ae@t']]
+            # phone_seq_chunk = ['@dh@ah', '@k@ae@t']
             chunky_phone_seq_chunk = [pronounce_chars(w, raw_line=dirty_seq_chunk[ii], cmu_only=True) for ii, w in enumerate(tsc)]
             phone_seq_chunk = [cpsc[0] if cpsc != None else None for cpsc in chunky_phone_seq_chunk]
         else:
@@ -75,6 +77,8 @@ def transform_text(char_seq, auto_pronounce=True, phone_seq=None, force_char_spc
     int_char_chunks = []
     int_phone_chunks = []
     for n in range(len(char_seq_chunk)):
+        # int_char_chunks = [[21, 9, 6]](the) [[21, 9, 6], [4, 2, 21]](cat)
+        # int_phone_chunks = [[11, 4]](@dh@ah) [[11, 4], [21, 3, 32]](@k@ae@t)
         int_char_chunks.append(text_to_sequence(char_seq_chunk[n], [clean_names[0]])[:-1])
         if phone_seq_chunk[n] == None:
             int_phone_chunks.append([])
@@ -137,6 +141,8 @@ def transform_text(char_seq, auto_pronounce=True, phone_seq=None, force_char_spc
         #print("NUN")
         #print(cpt)
         #from IPython import embed; embed(); raise ValueError()
+    # [11, 4, 35, 21, 3, 32, 1]
+    # [1, 1, 0, 1, 1, 1, 0]
     return cphi, cpm
 
 def inverse_transform_text(int_seq, mask):
@@ -148,5 +154,10 @@ def inverse_transform_text(int_seq, mask):
     cphi = int_seq
     cpm = mask
     cpt = "".join([sequence_to_text([cphi[i]], [clean_names[cpm[i]]]) for i in range(len(cphi))])
+    '''
+    cphi = [11, 4, 35, 21, 3, 32, 1]
+    cpm = [1, 1, 0, 1, 1, 1, 0]
+    cpt = '@dh@ah @k@ae@t~'
+    '''
     return cpt
     # setting char_phone_mask to 0 will use chars, 1 will use phones
