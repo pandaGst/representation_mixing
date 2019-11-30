@@ -1,21 +1,21 @@
 import argparse
-import os
-import tensorflow as tf
-import numpy as np
-from collections import namedtuple
-import sys
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import copy
+import os
+import sys
 import time
-#from datasets import wavfile_caching_mel_tbptt_iterator
-from audio import soundsc
-from audio import stft
-from audio import iterate_invert_spectrogram
-from transform_text import transform_text
-from transform_text import inverse_transform_text
+from collections import namedtuple
+
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+import tensorflow as tf
 from scipy.io import wavfile
+
+#from datasets import wavfile_caching_mel_tbptt_iterator
+from audio import iterate_invert_spectrogram, soundsc, stft
+from transform_text import inverse_transform_text, transform_text
+
+matplotlib.use("Agg")
 
 
 parser = argparse.ArgumentParser()
