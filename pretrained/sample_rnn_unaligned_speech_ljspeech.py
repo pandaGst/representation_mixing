@@ -102,8 +102,8 @@ lines = [l.strip() for l in lines]
 print("lines to sample:")
 for l in lines:
     if "." in l:
-        lm1 = l[:-1].replace(".", ",")
-        l = lm1 + l[-1]
+        lm1 = l[:-1].replace(".", ",")    # 句子中的 点号换成逗号
+        l = lm1 + l[-1]    # 但是结尾的标点符号不变
     pre_lines.append(l)
     tt, mm = transform_text(l)
     ot = inverse_transform_text(tt, mm)
