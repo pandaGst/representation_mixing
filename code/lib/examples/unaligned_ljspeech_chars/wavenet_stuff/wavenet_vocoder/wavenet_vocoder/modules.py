@@ -17,7 +17,7 @@ def Conv1d(in_channels, out_channels, kernel_size, dropout=0, std_mul=4.0, **kwa
     m.bias.data.zero_()
     return nn.utils.weight_norm(m)
 
-
+# Embedding(text, vocabulary_size, emb_dim, random_state=random_state, name="text_phone_emb")
 def Embedding(num_embeddings, embedding_dim, padding_idx, std=0.01):
     m = nn.Embedding(num_embeddings, embedding_dim, padding_idx=padding_idx)
     m.weight.data.normal_(0, std)

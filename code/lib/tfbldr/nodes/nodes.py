@@ -509,7 +509,7 @@ def VqEmbedding(input_tensor, input_dim, embedding_dim,
     # Need *both* straight through quantized and non-st for embedding loss
     return z_q_x, discrete_latent_idx, non_st_z_q_x, emb
 
-
+# Embedding(text, vocabulary_size, emb_dim, random_state=random_state, name="text_phone_emb")
 def Embedding(indices, n_symbols, output_dim, random_state=None,
               init="embedding_normal", scale=1.,
               strict=None, name=None):
